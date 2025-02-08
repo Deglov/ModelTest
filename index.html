@@ -10,45 +10,56 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     <script>
-        // Create a scene
+						 
         const scene = new THREE.Scene();
+
+        // Load background image (replace with your image file name and path)
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load('background.png', function (texture) {
+            scene.background = texture; // Set the texture as the scene's background
+        });
+
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Add lighting
-        const light = new THREE.AmbientLight(0xffffff, 2);
+        // Lighting
+        const light = new THREE.DirectionalLight(0xffffff, 3);
+        light.position.set(1, 1, 2);
         scene.add(light);
 
-        // Load 3D model (Replace 'model.gltf' with your actual file)
+        // Load 3D model
         const loader = new THREE.GLTFLoader();
-        loader.load('0208FOKAN_GLTF.glb', function (gltf) {
+        loader.load('0207FOKAN_GLTF.glb', function (gltf) {
             scene.add(gltf.scene);
             gltf.scene.position.set(0, 0, 0); // Adjust position if needed
-            gltf.scene.scale.set(0.01, 0.01, 0.01); // Scale down the model
+            gltf.scene.scale.set(0.1, 0.1, 0.1); // Scale the model
+        }, undefined, function (error) {
+            console.error("Error loading model:", error);
         });
 
-        camera.position.set(0, 1, 6); // Adjust the camera position
+        camera.position.set(0, 1, 6);
 
-        // Enable mouse controls (rotate, zoom, pan)
+													
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Smooth rotation
+        controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.screenSpacePanning = false;
-        controls.maxDistance = 10; // Maximum zoom out
-        controls.minDistance = 1;  // Minimum zoom in
+											
+													  
+													 
 
-        // Animation loop
+						 
         function animate() {
             requestAnimationFrame(animate);
             controls.update();
             renderer.render(scene, camera);
         }
+
         animate();
 
-        // Resize handling
+						  
         window.addEventListener('resize', function () {
             const width = window.innerWidth;
             const height = window.innerHeight;
